@@ -1,0 +1,196 @@
+1. after voter pod deletation.
+
+Answer : Voter pod changed in vote url, otherwise application has no impact. Voter pod got new IP.
+
+Result Pod has no impact, 
+
+[root@ip-172-31-37-170 example-voting-app]# kubectl get pod -o wide
+NAME                      READY   STATUS    RESTARTS   AGE     IP               NODE                                               NOMINATED NODE   READINESS GATES
+db-b54cd94f4-bsw96        1/1     Running   0          45m     192.168.91.105   ip-172-31-33-138.ap-southeast-1.compute.internal   <none>           <none>
+redis-868d64d78-bz8rn     1/1     Running   0          45m     192.168.91.106   ip-172-31-33-138.ap-southeast-1.compute.internal   <none>           <none>
+result-5d57b59f4b-w9rzc   1/1     Running   0          45m     192.168.91.107   ip-172-31-33-138.ap-southeast-1.compute.internal   <none>           <none>
+vote-94849dc97-tgbxv      1/1     Running   0          6m25s   192.168.91.110   ip-172-31-33-138.ap-southeast-1.compute.internal   <none>           <none>
+worker-dd46d7584-b2l4w    1/1     Running   0          45m     192.168.91.109   ip-172-31-33-138.ap-southeast-1.compute.internal   <none>           <none>
+[root@ip-172-31-37-170 example-voting-app]#
+[root@ip-172-31-37-170 example-voting-app]#
+[root@ip-172-31-37-170 example-voting-app]#
+[root@ip-172-31-37-170 example-voting-app]#
+[root@ip-172-31-37-170 example-voting-app]# curl 13.212.229.85:31000
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Cats vs Dogs!</title>
+    <base href="/index.html">
+    <meta name = "viewport" content = "width=device-width, initial-scale = 1.0">
+    <meta name="keywords" content="docker-compose, docker, stack">
+    <meta name="author" content="Tutum dev team">
+    <link rel='stylesheet' href="/static/stylesheets/style.css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+  </head>
+  <body>
+    <div id="content-container">
+      <div id="content-container-center">
+        <h3>Cats vs Dogs!</h3>
+        <form id="choice" name='form' method="POST" action="/">
+          <button id="a" type="submit" name="vote" class="a" value="a">Cats</button>
+          <button id="b" type="submit" name="vote" class="b" value="b">Dogs</button>
+        </form>
+        <div id="tip">
+          (Tip: you can change your vote)
+        </div>
+        <div id="hostname">
+          Processed by container ID vote-94849dc97-tgbxv
+        </div>
+      </div>
+    </div>
+    <script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+
+
+  </body>
+</html>[root@ip-172-31-37-170 example-voting-app]#
+[root@ip-172-31-37-170 example-voting-app]# kubectl delete pod vote-94849dc97-tgbxv
+pod "vote-94849dc97-tgbxv" deleted
+^C
+[root@ip-172-31-37-170 example-voting-app]# kubectl get pod -o wide
+NAME                      READY   STATUS    RESTARTS   AGE   IP               NODE                                               NOMINATED NODE   READINESS GATES
+db-b54cd94f4-bsw96        1/1     Running   0          47m   192.168.91.105   ip-172-31-33-138.ap-southeast-1.compute.internal   <none>           <none>
+redis-868d64d78-bz8rn     1/1     Running   0          47m   192.168.91.106   ip-172-31-33-138.ap-southeast-1.compute.internal   <none>           <none>
+result-5d57b59f4b-w9rzc   1/1     Running   0          47m   192.168.91.107   ip-172-31-33-138.ap-southeast-1.compute.internal   <none>           <none>
+vote-94849dc97-gf7lq      1/1     Running   0          17s   192.168.91.111   ip-172-31-33-138.ap-southeast-1.compute.internal   <none>           <none>
+worker-dd46d7584-b2l4w    1/1     Running   0          47m   192.168.91.109   ip-172-31-33-138.ap-southeast-1.compute.internal   <none>           <none>
+[root@ip-172-31-37-170 example-voting-app]#
+[root@ip-172-31-37-170 example-voting-app]#
+[root@ip-172-31-37-170 example-voting-app]# curl 13.212.229.85:31000
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Cats vs Dogs!</title>
+    <base href="/index.html">
+    <meta name = "viewport" content = "width=device-width, initial-scale = 1.0">
+    <meta name="keywords" content="docker-compose, docker, stack">
+    <meta name="author" content="Tutum dev team">
+    <link rel='stylesheet' href="/static/stylesheets/style.css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+  </head>
+  <body>
+    <div id="content-container">
+      <div id="content-container-center">
+        <h3>Cats vs Dogs!</h3>
+        <form id="choice" name='form' method="POST" action="/">
+          <button id="a" type="submit" name="vote" class="a" value="a">Cats</button>
+          <button id="b" type="submit" name="vote" class="b" value="b">Dogs</button>
+        </form>
+        <div id="tip">
+          (Tip: you can change your vote)
+        </div>
+        <div id="hostname">
+          Processed by container ID vote-94849dc97-gf7lq
+        </div>
+      </div>
+    </div>
+    <script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
+
+
+2. After deleting worker pod.
+
+Answer: Vote and result portal working fine, pod created with new IP.
+
+root@ip-172-31-37-170 ~]#
+[root@ip-172-31-37-170 ~]#
+[root@ip-172-31-37-170 ~]# kubectl get pod -o wide
+NAME                      READY   STATUS    RESTARTS   AGE     IP               NODE                                               NOMINATED NODE   READINESS GATES
+db-b54cd94f4-bsw96        1/1     Running   0          61m     192.168.91.105   ip-172-31-33-138.ap-southeast-1.compute.internal   <none>           <none>
+redis-868d64d78-bz8rn     1/1     Running   0          61m     192.168.91.106   ip-172-31-33-138.ap-southeast-1.compute.internal   <none>           <none>
+result-5d57b59f4b-w9rzc   1/1     Running   0          61m     192.168.91.107   ip-172-31-33-138.ap-southeast-1.compute.internal   <none>           <none>
+vote-94849dc97-gf7lq      1/1     Running   0          14m     192.168.91.111   ip-172-31-33-138.ap-southeast-1.compute.internal   <none>           <none>
+worker-dd46d7584-5zppt    1/1     Running   0          7m29s   192.168.91.112   ip-172-31-33-138.ap-southeast-1.compute.internal   <none>           <none>
+[root@ip-172-31-37-170 ~]#
+[root@ip-172-31-37-170 ~]#
+[root@ip-172-31-37-170 ~]#
+[root@ip-172-31-37-170 ~]# kubectl delete pod worker-dd46d7584-5zppt
+pod "worker-dd46d7584-5zppt" deleted
+^C
+[root@ip-172-31-37-170 ~]# kubectl get pod -o wide
+NAME                      READY   STATUS        RESTARTS   AGE     IP               NODE                                               NOMINATED NODE   READINESS GATES
+db-b54cd94f4-bsw96        1/1     Running       0          61m     192.168.91.105   ip-172-31-33-138.ap-southeast-1.compute.internal   <none>           <none>
+redis-868d64d78-bz8rn     1/1     Running       0          61m     192.168.91.106   ip-172-31-33-138.ap-southeast-1.compute.internal   <none>           <none>
+result-5d57b59f4b-w9rzc   1/1     Running       0          61m     192.168.91.107   ip-172-31-33-138.ap-southeast-1.compute.internal   <none>           <none>
+vote-94849dc97-gf7lq      1/1     Running       0          14m     192.168.91.111   ip-172-31-33-138.ap-southeast-1.compute.internal   <none>           <none>
+worker-dd46d7584-5zppt    0/1     Terminating   0          7m57s   192.168.91.112   ip-172-31-33-138.ap-southeast-1.compute.internal   <none>           <none>
+worker-dd46d7584-9zlh4    1/1     Running       0          13s     192.168.91.113   ip-172-31-33-138.ap-southeast-1.compute.internal   <none>           <none>
+[root@ip-172-31-37-170 ~]#
+[root@ip-172-31-37-170 ~]#
+[root@ip-172-31-37-170 ~]#
+[root@ip-172-31-37-170 ~]# kubectl get pod -o wide
+NAME                      READY   STATUS    RESTARTS   AGE   IP               NODE                                               NOMINATED NODE   READINESS GATES
+db-b54cd94f4-bsw96        1/1     Running   0          62m   192.168.91.105   ip-172-31-33-138.ap-southeast-1.compute.internal   <none>           <none>
+redis-868d64d78-bz8rn     1/1     Running   0          62m   192.168.91.106   ip-172-31-33-138.ap-southeast-1.compute.internal   <none>           <none>
+result-5d57b59f4b-w9rzc   1/1     Running   0          62m   192.168.91.107   ip-172-31-33-138.ap-southeast-1.compute.internal   <none>           <none>
+vote-94849dc97-gf7lq      1/1     Running   0          15m   192.168.91.111   ip-172-31-33-138.ap-southeast-1.compute.internal   <none>           <none>
+worker-dd46d7584-9zlh4    1/1     Running   0          44s   192.168.91.113   ip-172-31-33-138.ap-southeast-1.compute.internal   <none>           <none>
+[root@ip-172-31-37-170 ~]#
+[root@ip-172-31-37-170 ~]#
+[root@ip-172-31-37-170 ~]#
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+
+
+  </body>
+</html>[root@ip-172-31-37-170 example-voting-app]#
+
+3. After deleting db pod
+
+Answer: All previous vote deleted. Woeker and result pod went to error state and zero running container was showing in get pod output. Worker and result pod recreated.
+vote count is showing 1, only last vote again showing in result.
+
+
+[root@ip-172-31-37-170 ~]#
+[root@ip-172-31-37-170 ~]# kubectl get pod -o wide
+NAME                      READY   STATUS        RESTARTS   AGE     IP               NODE                                               NOMINATED NODE   READINESS GATES
+db-b54cd94f4-9l8l6        1/1     Running       0          10s     192.168.91.114   ip-172-31-33-138.ap-southeast-1.compute.internal   <none>           <none>
+db-b54cd94f4-bsw96        1/1     Terminating   0          65m     192.168.91.105   ip-172-31-33-138.ap-southeast-1.compute.internal   <none>           <none>
+redis-868d64d78-bz8rn     1/1     Running       0          65m     192.168.91.106   ip-172-31-33-138.ap-southeast-1.compute.internal   <none>           <none>
+result-5d57b59f4b-w9rzc   1/1     Running       0          65m     192.168.91.107   ip-172-31-33-138.ap-southeast-1.compute.internal   <none>           <none>
+vote-94849dc97-gf7lq      1/1     Running       0          17m     192.168.91.111   ip-172-31-33-138.ap-southeast-1.compute.internal   <none>           <none>
+worker-dd46d7584-9zlh4    1/1     Running       0          3m38s   192.168.91.113   ip-172-31-33-138.ap-southeast-1.compute.internal   <none>           <none>
+[root@ip-172-31-37-170 ~]#
+[root@ip-172-31-37-170 ~]#
+[root@ip-172-31-37-170 ~]# kubectl get pod -w
+NAME                      READY   STATUS        RESTARTS   AGE
+db-b54cd94f4-9l8l6        1/1     Running       0          25s
+db-b54cd94f4-bsw96        1/1     Terminating   0          65m
+redis-868d64d78-bz8rn     1/1     Running       0          65m
+result-5d57b59f4b-w9rzc   1/1     Running       0          65m
+vote-94849dc97-gf7lq      1/1     Running       0          18m
+worker-dd46d7584-9zlh4    1/1     Running       0          3m53s
+worker-dd46d7584-9zlh4    0/1     Error         0          3m58s
+result-5d57b59f4b-w9rzc   0/1     Error         0          65m
+result-5d57b59f4b-w9rzc   1/1     Running       1          65m
+db-b54cd94f4-bsw96        0/1     Terminating   0          65m
+worker-dd46d7584-9zlh4    1/1     Running       1          4m1s
+db-b54cd94f4-bsw96        0/1     Terminating   0          65m
+db-b54cd94f4-bsw96        0/1     Terminating   0          65m
+^C[root@ip-172-31-37-170 ~]#
+[root@ip-172-31-37-170 ~]#
+[root@ip-172-31-37-170 ~]# kubectl get pod
+NAME                      READY   STATUS    RESTARTS   AGE
+db-b54cd94f4-9l8l6        1/1     Running   0          2m6s
+redis-868d64d78-bz8rn     1/1     Running   0          67m
+result-5d57b59f4b-w9rzc   1/1     Running   1          67m
+vote-94849dc97-gf7lq      1/1     Running   0          19m
+worker-dd46d7584-9zlh4    1/1     Running   1          5m34s
+[root@ip-172-31-37-170 ~]#
+[root@ip-172-31-37-170 ~]#
+root@ip-172-31-37-170 ~]#
+[root@ip-172-31-37-170 ~]# kubectl get pod -o wide
+NAME                      READY   STATUS    RESTARTS   AGE     IP               NODE                                               NOMINATED NODE   READINESS GATES
+db-b54cd94f4-9l8l6        1/1     Running   0          3m44s   192.168.91.114   ip-172-31-33-138.ap-southeast-1.compute.internal   <none>           <none>
+redis-868d64d78-bz8rn     1/1     Running   0          68m     192.168.91.106   ip-172-31-33-138.ap-southeast-1.compute.internal   <none>           <none>
+result-5d57b59f4b-w9rzc   1/1     Running   1          68m     192.168.91.107   ip-172-31-33-138.ap-southeast-1.compute.internal   <none>           <none>
+vote-94849dc97-gf7lq      1/1     Running   0          21m     192.168.91.111   ip-172-31-33-138.ap-southeast-1.compute.internal   <none>           <none>
+worker-dd46d7584-9zlh4    1/1     Running   1          7m12s   192.168.91.113   ip-172-31-33-138.ap-southeast-1.compute.internal   <none>           <none>
+[root@ip-172-31-37-170 ~]#
+
